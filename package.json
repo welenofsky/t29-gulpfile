@@ -1,0 +1,23 @@
+{
+  "name": "t29-gulpfile",
+  "version": "1.0.0",
+  "description": "Gulpfile for use with wordpress, made for t29 wordpress structure",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp-notify": "^2.2.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/welenofsky/t29-gulpfile.git"
+  },
+  "author": "",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/welenofsky/t29-gulpfile/issues"
+  },
+  "homepage": "https://github.com/welenofsky/t29-gulpfile#readme"
+}
