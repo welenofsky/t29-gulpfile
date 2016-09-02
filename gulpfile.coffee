@@ -12,8 +12,17 @@ uglify      = require 'gulp-uglify'
 gulp.task 'js', ->
   return gulp.src('./wp-content/themes/**/skin/js/custom.js')
     .pipe(jshint())
+    .pipe(notify( (file) ->
+        if file.jshint.success
+            return false;
+        errors = file.jshint.results.map( (data) ->
+            if data.error 
+                return "(" + data.error.line + ':' + data.error.character + ') ' + data.error.reason;
+        ).join("\n");
+        return file.relative + " (" + file.jshint.results.length + " errors)\n" + errors;
+    ))
     .pipe(uglify())
-    .pipe(rename((path) ->
+    .pipe(rename( (path) ->
         path.dirname = path.dirname;
         path.basename = "custom";
         path.extname = ".min.js";
