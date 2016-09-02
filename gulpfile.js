@@ -68,7 +68,6 @@ gulp.task('gulpfile', function(){
     return gulp.src('./gulpfile.coffee')
             .pipe(coffee({bare: true}).on('error', gutil.log))
             .pipe(jshint())
-            .pipe(uglify())
             .pipe(rename('gulpfile.test.js'))
             .pipe(gulp.dest('./'));
 });

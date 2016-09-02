@@ -2,7 +2,9 @@ gulp        = require 'gulp'
 less        = require 'gulp-less' 
 path        = require 'path' 
 rename      = require 'gulp-rename' 
-cleanCSS    = require 'gulp-clean-css' 
+cleanCSS    = require 'gulp-clean-css'
+coffee      = require 'gulp-coffee'
+gutil       = require 'gulp-util'
 jshint      = require 'gulp-jshint' 
 livereload  = require 'gulp-livereload' 
 notify      = require 'gulp-notify' 
@@ -26,9 +28,9 @@ gulp.task 'js', ->
         return 'JS Minification failed: ' + error.message;
     )
     .pipe rename((path) ->
-        path.dirname = path.dirname;
-        path.basename = "custom";
-        path.extname = ".min.js";
+        path.dirname    = path.dirname;
+        path.basename   = "custom";
+        path.extname    = ".min.js";
     )
     .pipe gulp.dest('./wp-content/themes/')
     .pipe livereload();
@@ -47,13 +49,21 @@ gulp.task 'less', ->
         return 'CSS minification failed: ' + error.message;
     )
     .pipe rename((path) ->
-        path.dirname += "/../skin/css";
-        path.basename = "custom-theme";
-        path.extname = ".min.css";
+        path.dirname    += "/../skin/css";
+        path.basename    = "custom-theme";
+        path.extname     = ".min.css";
     )
     .pipe gulp.dest('./wp-content/themes/')
     .pipe notify('LESS compiled successfully!')
     .pipe livereload();
+
+
+gulp.task 'gulpfile', ->
+    return gulp.src './gulpfile.coffee'
+            .pipe coffee( bare: true ).on 'error', gutil.log
+            .pipe jshint()
+            .pipe rename('gulpfile.test.js')
+            .pipe gulp.dest('./');
 
 
 gulp.task 'default', (callback) ->

@@ -1,1 +1,72 @@
-var cleanCSS,gulp,jshint,less,livereload,notify,path,rename,uglify;gulp=require("gulp"),less=require("gulp-less"),path=require("path"),rename=require("gulp-rename"),cleanCSS=require("gulp-clean-css"),jshint=require("gulp-jshint"),livereload=require("gulp-livereload"),notify=require("gulp-notify"),uglify=require("gulp-uglify"),gulp.task("js",function(){return gulp.src("./wp-content/themes/**/skin/js/custom.js").pipe(jshint()).pipe(notify(function(e){var r;return!e.jshint.success&&(r=e.jshint.results.map(function(e){if(e.error)return"("+e.error.line+":"+e.error.character+") "+e.error.reason}).join("\n"),e.relative+" ("+e.jshint.results.length+" errors)\n"+r)})).pipe(uglify()).on("error",notify.onError(function(e){return"JS Minification failed: "+e.message})).pipe(rename(function(e){return e.dirname=e.dirname,e.basename="custom",e.extname=".min.js"})).pipe(gulp.dest("./wp-content/themes/")).pipe(livereload())}),gulp.task("less",function(){return gulp.src("./wp-content/themes/**/less/custom-theme.less").pipe(less({paths:[path.join(__dirname,"less","includes")]})).on("error",notify.onError(function(e){return"LESS compilation failed: "+e.message})).pipe(cleanCSS()).on("error",notify.onError(function(e){return"CSS minification failed: "+e.message})).pipe(rename(function(e){return e.dirname+="/../skin/css",e.basename="custom-theme",e.extname=".min.css"})).pipe(gulp.dest("./wp-content/themes/")).pipe(notify("LESS compiled successfully!")).pipe(livereload())}),gulp.task("default",function(e){return livereload.listen({start:!0}),gulp.watch("**/skin/js/custom.js",["js"]),gulp.watch("**/less/*.less",["less"])});
+var cleanCSS, coffee, gulp, gutil, jshint, less, livereload, notify, path, rename, uglify;
+
+gulp = require('gulp');
+
+less = require('gulp-less');
+
+path = require('path');
+
+rename = require('gulp-rename');
+
+cleanCSS = require('gulp-clean-css');
+
+coffee = require('gulp-coffee');
+
+gutil = require('gulp-util');
+
+jshint = require('gulp-jshint');
+
+livereload = require('gulp-livereload');
+
+notify = require('gulp-notify');
+
+uglify = require('gulp-uglify');
+
+gulp.task('js', function() {
+  return gulp.src('./wp-content/themes/**/skin/js/custom.js').pipe(jshint()).pipe(notify(function(file) {
+    var errors;
+    if (file.jshint.success) {
+      return false;
+    }
+    errors = file.jshint.results.map(function(data) {
+      if (data.error) {
+        return "(" + data.error.line + ':' + data.error.character + ') ' + data.error.reason;
+      }
+    }).join("\n");
+    return file.relative + " (" + file.jshint.results.length + " errors)\n" + errors;
+  })).pipe(uglify()).on('error', notify.onError(function(error) {
+    return 'JS Minification failed: ' + error.message;
+  })).pipe(rename(function(path) {
+    path.dirname = path.dirname;
+    path.basename = "custom";
+    return path.extname = ".min.js";
+  })).pipe(gulp.dest('./wp-content/themes/')).pipe(livereload());
+});
+
+gulp.task('less', function() {
+  return gulp.src('./wp-content/themes/**/less/custom-theme.less').pipe(less({
+    paths: [path.join(__dirname, 'less', 'includes')]
+  })).on('error', notify.onError(function(error) {
+    return 'LESS compilation failed: ' + error.message;
+  })).pipe(cleanCSS()).on('error', notify.onError(function(error) {
+    return 'CSS minification failed: ' + error.message;
+  })).pipe(rename(function(path) {
+    path.dirname += "/../skin/css";
+    path.basename = "custom-theme";
+    return path.extname = ".min.css";
+  })).pipe(gulp.dest('./wp-content/themes/')).pipe(notify('LESS compiled successfully!')).pipe(livereload());
+});
+
+gulp.task('gulpfile', function() {
+  return gulp.src('./gulpfile.coffee').pipe(coffee({
+    bare: true
+  }).on('error', gutil.log)).pipe(jshint()).pipe(rename('gulpfile.test.js')).pipe(gulp.dest('./'));
+});
+
+gulp.task('default', function(callback) {
+  livereload.listen({
+    start: true
+  });
+  gulp.watch('**/skin/js/custom.js', ['js']);
+  return gulp.watch('**/less/*.less', ['less']);
+});
