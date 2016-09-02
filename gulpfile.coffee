@@ -17,11 +17,11 @@ gulp.task 'js', ->
         .pipe notify((file) ->
             if file.jshint.success
                 return false
-            errors = file.jshint.results.map( (data) ->
+            errors = file.jshint.results.map((data) ->
                 if data.error 
-                    "(" + data.error.line + ':' + data.error.character + ') ' + data.error.reason
+                    "(#{data.error.line}: #{data.error.character}) #{data.error.reason}"
             ).join("\n");
-            file.relative + " (" + file.jshint.results.length + " errors)\n" + errors
+            "#{file.relative} (#{file.jshint.results.length} errors)\n" + errors
         )
         .pipe uglify()
         .on 'error', notify.onError((error) ->
@@ -43,11 +43,11 @@ gulp.task 'less', ->
           paths : [ path.join(__dirname, 'less', 'includes') ]
         )
         .on 'error', notify.onError((error) ->
-            'LESS compilation failed: ' + error.message
+            "LESS compilation failed: #{error.message}"
         )
         .pipe(cleanCSS())
         .on 'error', notify.onError((error) ->
-            'CSS minification failed: ' + error.message
+            "CSS minification failed: #{error.message}"
         )
         .pipe rename((path) ->
             path.dirname    += "/../skin/css"
@@ -63,9 +63,22 @@ gulp.task 'less', ->
 gulp.task 'gulpfile', ->
     gulp.src './gulpfile.coffee'
         .pipe coffee( bare: true ).on 'error', gutil.log
+        .on 'error', notify.onError((error) ->
+            "Gulpfile.coffee failed to compile: #{error.message}"
+        )
         .pipe jshint()
+        .pipe notify((file) ->
+            if file.jshint.success
+                return false
+            errors = file.jshint.results.map((data) ->
+                if data.error 
+                    "(#{data.error.line}: #{data.error.character}) #{data.error.reason}"
+            ).join("\n");
+            "#{file.relative} (#{file.jshint.results.length} errors)\n" + errors
+        )
         .pipe rename('gulpfile.js')
         .pipe gulp.dest('./')
+        .pipe notify('Gulpfile compiled successfully!')
 
 
 gulp.task 'default', (callback) ->

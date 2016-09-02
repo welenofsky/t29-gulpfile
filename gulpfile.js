@@ -30,10 +30,10 @@ gulp.task('js', function() {
     }
     errors = file.jshint.results.map(function(data) {
       if (data.error) {
-        return "(" + data.error.line + ':' + data.error.character + ') ' + data.error.reason;
+        return "(" + data.error.line + ": " + data.error.character + ") " + data.error.reason;
       }
     }).join("\n");
-    return file.relative + " (" + file.jshint.results.length + " errors)\n" + errors;
+    return (file.relative + " (" + file.jshint.results.length + " errors)\n") + errors;
   })).pipe(uglify()).on('error', notify.onError(function(error) {
     return 'JS Minification failed: ' + error.message;
   })).pipe(rename(function(path) {
@@ -47,9 +47,9 @@ gulp.task('less', function() {
   return gulp.src('./wp-content/themes/**/less/custom-theme.less').pipe(less({
     paths: [path.join(__dirname, 'less', 'includes')]
   })).on('error', notify.onError(function(error) {
-    return 'LESS compilation failed: ' + error.message;
+    return "LESS compilation failed: " + error.message;
   })).pipe(cleanCSS()).on('error', notify.onError(function(error) {
-    return 'CSS minification failed: ' + error.message;
+    return "CSS minification failed: " + error.message;
   })).pipe(rename(function(path) {
     path.dirname += "/../skin/css";
     path.basename = "custom-theme";
@@ -60,7 +60,20 @@ gulp.task('less', function() {
 gulp.task('gulpfile', function() {
   return gulp.src('./gulpfile.coffee').pipe(coffee({
     bare: true
-  }).on('error', gutil.log)).pipe(jshint()).pipe(rename('gulpfile.js')).pipe(gulp.dest('./'));
+  }).on('error', gutil.log)).on('error', notify.onError(function(error) {
+    return "Gulpfile.coffee failed to compile: " + error.message;
+  })).pipe(jshint()).pipe(notify(function(file) {
+    var errors;
+    if (file.jshint.success) {
+      return false;
+    }
+    errors = file.jshint.results.map(function(data) {
+      if (data.error) {
+        return "(" + data.error.line + ": " + data.error.character + ") " + data.error.reason;
+      }
+    }).join("\n");
+    return (file.relative + " (" + file.jshint.results.length + " errors)\n") + errors;
+  })).pipe(rename('gulpfile.js')).pipe(gulp.dest('./')).pipe(notify('Gulpfile compiled successfully!'));
 });
 
 gulp.task('default', function(callback) {
