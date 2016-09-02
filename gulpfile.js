@@ -70,7 +70,7 @@ gulp.task('gulpfile', function(){
             .pipe(jshint())
             .pipe(uglify())
             .pipe(rename('gulpfile.test.js'))
-            .pipe(gulp.dest('.'));
+            .pipe(gulp.dest('./'));
 });
 
 gulp.task('default', function(callback) {
