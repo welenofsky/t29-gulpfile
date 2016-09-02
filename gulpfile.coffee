@@ -62,7 +62,7 @@ gulp.task 'gulpfile', ->
     return gulp.src './gulpfile.coffee'
             .pipe coffee( bare: true ).on 'error', gutil.log
             .pipe jshint()
-            .pipe rename('gulpfile.test.js')
+            .pipe rename('gulpfile.js')
             .pipe gulp.dest('./');
 
 
