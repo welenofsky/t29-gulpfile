@@ -8,6 +8,8 @@ var gulp        = require('gulp'),
     jshint      = require('gulp-jshint'),
     livereload  = require('gulp-livereload'),
     notify      = require('gulp-notify'),
+    coffee      = require('gulp-coffee'),
+    gutil       = require('gulp-util'),
     uglify      = require('gulp-uglify');
 
 
@@ -60,6 +62,13 @@ gulp.task('less', function () {
     .pipe(gulp.dest('./wp-content/themes/'))
     .pipe(notify('LESS compiled successfully!'))
     .pipe(livereload());
+});
+
+gulp.task('gulpfile', function(){
+    return gulp.src('./gulpfile.coffee')
+            .pipe(coffee({bare: true}).on('error', gutil.log))
+            .pipe(jshint())
+            .pipe(gulp.dest('./gulpfile.test.js'));
 });
 
 gulp.task('default', function(callback) {
