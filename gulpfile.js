@@ -39,7 +39,7 @@ gulp.task('js', function() {
   })).pipe(rename(function(path) {
     path.dirname = path.dirname;
     path.basename = "custom";
-    return path.extname = ".min.js";
+    path.extname = ".min.js";
   })).pipe(gulp.dest('./wp-content/themes/')).pipe(livereload());
 });
 
@@ -53,7 +53,7 @@ gulp.task('less', function() {
   })).pipe(rename(function(path) {
     path.dirname += "/../skin/css";
     path.basename = "custom-theme";
-    return path.extname = ".min.css";
+    path.extname = ".min.css";
   })).pipe(gulp.dest('./wp-content/themes/')).pipe(notify('LESS compiled successfully!')).pipe(livereload());
 });
 
