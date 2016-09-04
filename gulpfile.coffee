@@ -57,7 +57,8 @@ gulp.task 'less', ->
         )
         .pipe gulp.dest('./wp-content/themes/')
         .pipe notify('LESS compiled successfully!')
-        .pipe livereload();
+        # Currently Not working for less task
+        #.pipe livereload();
 
 
 gulp.task 'gulpfile', ->

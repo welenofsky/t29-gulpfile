@@ -7,3 +7,18 @@ The two files it is configured to process are:
 
 ./wp-content/themes/{THEME_NAME}/skin/js/custom.js  
 ./wp-content/themes/{THEME_NAME}/less/custom-theme.less
+
+## Usage
+
+Just clone, cd into the repositor and npm install and run gulp.
+```
+cd t29-gulpfile
+npm install
+gulp
+```
+
+If you want to make changes to the gulpfile, edit the gulpfile.coffee and use the gulp task
+```
+gulp gulpfile
+```
+to compile and new gulpfile.js file.

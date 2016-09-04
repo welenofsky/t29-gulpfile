@@ -54,7 +54,7 @@ gulp.task('less', function() {
     path.dirname += "/../skin/css";
     path.basename = "custom-theme";
     path.extname = ".min.css";
-  })).pipe(gulp.dest('./wp-content/themes/')).pipe(notify('LESS compiled successfully!')).pipe(livereload());
+  })).pipe(gulp.dest('./wp-content/themes/')).pipe(notify('LESS compiled successfully!'));
 });
 
 gulp.task('gulpfile', function() {
